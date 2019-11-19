@@ -1,6 +1,10 @@
 package com.eksamen.eksamen_h2019_6120;
 
 import android.content.Context;
+import android.view.View;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -17,14 +21,14 @@ import java.util.ArrayList;
 public class RestController {
     protected static ArrayList<Tilsyn> tilsynArrayList;
     protected static ArrayList<Tilsyn> kravpunkterArrayList;
-    private Tilsyn tilsyn;
-    private Kravpunkt kravpunkt;
-    private Smilefjes smilefjes;
+    protected static TilsynListeAdapter tilsynAdapter;
+
+
 
     private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?query=";
     private static final String ENDPOINT_KRAVPUNKT = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/kravpunkter?query=";
 
-    public static void tilsynRequest(String spoerring, Context context) {
+    public static void tilsynRequest(String spoerring, final Context context, final RecyclerView view) {
 
         String url = ENDPOINT_TILSYN + spoerring;
 
@@ -45,6 +49,10 @@ public class RestController {
 
                     }
                 }
+
+                tilsynAdapter = new TilsynListeAdapter(context);
+                view.setAdapter(tilsynAdapter);
+                view.setLayoutManager(new LinearLayoutManager(context));
             }
         }, new Response.ErrorListener() {
             @Override

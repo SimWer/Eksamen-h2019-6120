@@ -1,12 +1,9 @@
 package com.eksamen.eksamen_h2019_6120;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,10 +64,10 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
 
         }
 
-        @SuppressLint("ResourceAsColor")
         @Override
         public void onClick(View v) {
-            Toast.makeText(aktiviteten, "Du klikket på: " + navn.getText().toString(), Toast.LENGTH_SHORT).show();
+            Tilsyn tilsyn = RestController.tilsynArrayList.get(getLayoutPosition());
+            aktiviteten.onTilsynValgt(tilsyn);
         }// Slutt på onClick
     }// Slutt på holder-klassen
 }// Slutt på adapter-klassen
