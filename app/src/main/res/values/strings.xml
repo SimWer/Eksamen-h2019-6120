@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Eksamen-h2019-6120</string>
     <string name="soek_string">Søk</string>
+    <string name="bedrift_plassholder">Bedrift placeholder</string>
+    <string name="adresse_plassholder">Adresse plassholder</string>
 </resources>

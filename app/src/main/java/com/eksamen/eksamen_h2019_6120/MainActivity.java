@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements SoekFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements SoekFragment.OnFragmentInteractionListener, SmilefjesRapport.OnFragmentInteractionListener{
 
 
     @Override
@@ -23,12 +24,20 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
 
         SoekFragment soekFragment = SoekFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, soekFragment).commit();
-        }
+        if(savedInstanceState != null) {
 
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
 
     @Override
     public void onTilsynValgt(Tilsyn tilsyn) {
-
+        SmilefjesRapport smileFragment = SmilefjesRapport.newInstance();
+        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder, smileFragment).commit();
     }
 
     @Override
@@ -69,5 +78,10 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
         });
 
         helper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

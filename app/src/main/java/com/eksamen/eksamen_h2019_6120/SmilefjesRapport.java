@@ -25,6 +25,10 @@ public class SmilefjesRapport extends Fragment {
         // Required empty public constructor
     }
 
+    public static SmilefjesRapport newInstance(){
+        return new SmilefjesRapport();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

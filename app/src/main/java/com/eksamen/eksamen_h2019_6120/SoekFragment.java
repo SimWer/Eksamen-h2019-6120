@@ -79,8 +79,11 @@ public class SoekFragment extends Fragment {
                 String dato;
                 if(month < 10) {
                     dato = "" + "0" + dayOfMonth + "0" + month +  year;
-                } else {
+                } else if (dayOfMonth < 10) {
                     dato = "" + "0" + dayOfMonth + month +  year;
+
+                } else {
+                    dato = "" + dayOfMonth + month +  year;
 
                 }
                 datoFelt.setText(dato);
@@ -99,6 +102,7 @@ public class SoekFragment extends Fragment {
         // Inflate the layout for this fragment
         return rotView;
     }
+
 
 
     @Override

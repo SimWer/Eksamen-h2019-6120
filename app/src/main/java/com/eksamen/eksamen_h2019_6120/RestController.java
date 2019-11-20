@@ -25,7 +25,7 @@ public class RestController {
 
 
 
-    private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?query=";
+    private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?name=";
     private static final String ENDPOINT_KRAVPUNKT = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/kravpunkter?query=";
 
     public static void tilsynRequest(String spoerring, final Context context, final RecyclerView view) {
