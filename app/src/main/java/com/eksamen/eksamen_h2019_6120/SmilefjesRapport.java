@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -20,6 +23,12 @@ import android.view.ViewGroup;
 public class SmilefjesRapport extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+
+    private TextView bedriftNavn, bedriftAdresse;
+
+    private Tilsyn valgtTilsyn;
+
+    private Kravpunkt valgtKravpunkt;
 
     public SmilefjesRapport() {
         // Required empty public constructor
@@ -33,8 +42,21 @@ public class SmilefjesRapport extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rotView = inflater.inflate(R.layout.fragment_smilefjes_fragment, container, false);
+
+        bedriftNavn = rotView.findViewById(R.id.bedrift_plassholder);
+        bedriftAdresse = rotView.findViewById(R.id.adresse_plasshodler);
+
+        if(getArguments() != null) {
+            valgtTilsyn = (Tilsyn)getArguments().getSerializable(MainActivity.ID);
+            bedriftNavn.setText(valgtTilsyn.getNavn());
+            bedriftAdresse.setText(valgtTilsyn.getAdrlinje1());
+
+            RestController.kravpunkterRequest(valgtTilsyn.getTilsynid(), this.getContext());
+        }
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_smilefjes_fragment, container, false);
+        return rotView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 public class RestController {
     protected static ArrayList<Tilsyn> tilsynArrayList;
-    protected static ArrayList<Tilsyn> kravpunkterArrayList;
+    protected static ArrayList<Kravpunkt> kravpunkterArrayList;
     protected static TilsynListeAdapter tilsynAdapter;
 
 
 
-    private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?name=";
-    private static final String ENDPOINT_KRAVPUNKT = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/kravpunkter?query=";
+    private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?query=";
+    private static final String ENDPOINT_KRAVPUNKT = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/kravpunkter?tilsynid=";
 
     public static void tilsynRequest(String spoerring, final Context context, final RecyclerView view) {
 
@@ -63,23 +63,23 @@ public class RestController {
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void kravpunkterRequest(String spoerring, Context context) {
+    public static void kravpunkterRequest(String tilsynID, Context context) {
 
-        String url = ENDPOINT_TILSYN + spoerring;
+        String url = ENDPOINT_KRAVPUNKT + tilsynID;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if(tilsynArrayList != null) {
-                    tilsynArrayList.clear();
+                if(kravpunkterArrayList != null) {
+                    kravpunkterArrayList.clear();
                 }
-                tilsynArrayList = new ArrayList<>();
+                kravpunkterArrayList = new ArrayList<>();
                 JSONArray jsonArray = response.optJSONArray("entries");
                 for(int i = 0; i < jsonArray.length(); i++)  {
                     try {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        Tilsyn tilsyn = new Tilsyn(jsonObject);
-                        tilsynArrayList.add(tilsyn);
+                        Kravpunkt kravpunkt = new Kravpunkt(jsonObject);
+                        kravpunkterArrayList.add(kravpunkt);
                     }catch (JSONException e) {
 
                     }

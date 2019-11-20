@@ -3,4 +3,6 @@
     <string name="soek_string">Søk</string>
     <string name="bedrift_plassholder">Bedrift placeholder</string>
     <string name="adresse_plassholder">Adresse plassholder</string>
+    <string name="alert_beskjed"><b>Er du sikker på at du vil fjerne fra listen?</b> <i>Tilsynet vil bli fjernet fra listen og du må gjennomføre et nytt søk for å se tilsynet</i></string>
+
 </resources>

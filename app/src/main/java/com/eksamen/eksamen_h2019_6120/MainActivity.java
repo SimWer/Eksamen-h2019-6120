@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements SoekFragment.OnFragmentInteractionListener, SmilefjesRapport.OnFragmentInteractionListener{
-
+    protected static final String ID = "Eksamen-h2019-6120";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,10 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
     @Override
     public void onTilsynValgt(Tilsyn tilsyn) {
         SmilefjesRapport smileFragment = SmilefjesRapport.newInstance();
-        getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.fragment_holder, smileFragment).commit();
+        Bundle args = new Bundle();
+        args.putSerializable(ID, tilsyn);
+        smileFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, smileFragment).addToBackStack(null).commit();
     }
 
     @Override
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
                 // Kodeeksempler hentet fra stackoverflow: https://stackoverflow.com/questions/50137310/confirm-dialog-before-swipe-delete-using-itemtouchhelper
                 // Dialog for å bekrefte eller avkrefte sletting - Krav i oppgaveteksten
                 new AlertDialog.Builder(viewHolder.itemView.getContext())
-                        .setMessage("Er du sikker på at du vil fjerne fra listen?")
+                        .setMessage(R.string.alert_beskjed)
                         .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
