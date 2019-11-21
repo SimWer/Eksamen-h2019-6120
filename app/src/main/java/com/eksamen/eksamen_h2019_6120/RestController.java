@@ -2,6 +2,7 @@ package com.eksamen.eksamen_h2019_6120;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ public class RestController {
     protected static ArrayList<Kravpunkt> kravpunkterArrayList;
     protected static TilsynListeAdapter tilsynAdapter;
 
+    private final static String ARRAY_NAVN = "entries";
 
 
     private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?query=";
@@ -39,7 +41,7 @@ public class RestController {
                     tilsynArrayList.clear();
                 }
                 tilsynArrayList = new ArrayList<>();
-                JSONArray jsonArray = response.optJSONArray("entries");
+                JSONArray jsonArray = response.optJSONArray(ARRAY_NAVN);
                 for(int i = 0; i < jsonArray.length(); i++)  {
                     try {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -57,13 +59,12 @@ public class RestController {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
             }
         });
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void kravpunkterRequest(String tilsynID, Context context) {
+    public static void kravpunkterRequest(String tilsynID, final Context context) {
 
         String url = ENDPOINT_KRAVPUNKT + tilsynID;
 
@@ -74,7 +75,7 @@ public class RestController {
                     kravpunkterArrayList.clear();
                 }
                 kravpunkterArrayList = new ArrayList<>();
-                JSONArray jsonArray = response.optJSONArray("entries");
+                JSONArray jsonArray = response.optJSONArray(ARRAY_NAVN);
                 for(int i = 0; i < jsonArray.length(); i++)  {
                     try {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -84,10 +85,12 @@ public class RestController {
 
                     }
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });

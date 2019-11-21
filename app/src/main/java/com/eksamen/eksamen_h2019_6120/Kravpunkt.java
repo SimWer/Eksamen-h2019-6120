@@ -46,4 +46,13 @@ public class Kravpunkt {
     public String getTekst_no() {
         return tekst_no;
     }
+
+    @Override
+    public String toString() {
+        return  tilsynid + "        " + dato + '\'' +
+                ", kravpunktnavn_no='" + kravpunktnavn_no + '\'' +
+                ", karakter='" + karakter + '\'' +
+                ", tekst_no='" + tekst_no + '\'' +
+                '}';
+    }
 }

@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements SoekFragment.OnFragmentInteractionListener, SmilefjesRapport.OnFragmentInteractionListener{
+    //ID for å hente ut data sendt fra fragment til fragment
+
     protected static final String ID = "Eksamen-h2019-6120";
 
     @Override

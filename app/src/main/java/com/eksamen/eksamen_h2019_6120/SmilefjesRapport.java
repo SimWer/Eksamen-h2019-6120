@@ -9,7 +9,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -25,10 +28,13 @@ public class SmilefjesRapport extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private TextView bedriftNavn, bedriftAdresse;
+    private ListView kravlisteView;
 
     private Tilsyn valgtTilsyn;
 
     private Kravpunkt valgtKravpunkt;
+
+    private String tilsynid, tilsynNavn, tilsynAdresse;
 
     public SmilefjesRapport() {
         // Required empty public constructor
@@ -49,22 +55,28 @@ public class SmilefjesRapport extends Fragment {
 
         if(getArguments() != null) {
             valgtTilsyn = (Tilsyn)getArguments().getSerializable(MainActivity.ID);
-            bedriftNavn.setText(valgtTilsyn.getNavn());
-            bedriftAdresse.setText(valgtTilsyn.getAdrlinje1());
+            tilsynid = valgtTilsyn.getTilsynid();
+            tilsynNavn = valgtTilsyn.getNavn();
+            tilsynAdresse = valgtTilsyn.getAdrlinje1();
 
-            RestController.kravpunkterRequest(valgtTilsyn.getTilsynid(), this.getContext());
+            bedriftNavn.setText(tilsynNavn);
+            bedriftAdresse.setText(tilsynAdresse);
+
+            RestController.kravpunkterRequest(tilsynid, this.getContext());
+        }
+
+        if(RestController.kravpunkterArrayList != null) {
+            kravlisteView = rotView.findViewById(R.id.kravpunktListe);
+            ArrayAdapter<Kravpunkt> kravpunktArrayAdapter = new ArrayAdapter<>(this.getContext(), R.layout.kravpunkt_liste, R.id.kravpunktTekst, RestController.kravpunkterArrayList);
+            kravlisteView.setAdapter(kravpunktArrayAdapter);
+        } else {
+
         }
 
         // Inflate the layout for this fragment
         return rotView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
