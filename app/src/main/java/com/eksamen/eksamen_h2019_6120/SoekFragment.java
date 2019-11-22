@@ -32,11 +32,20 @@ public class SoekFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private RecyclerView recyclerView;
+
     private String url;
-    private EditText sokFelt, datoFelt;
+
+    private EditText sokFelt;
+
     private Button sokKnapp;
+
     private Context context;
-    private DatePickerDialog.OnDateSetListener dateSetListener;
+
+    private static final String KEY_FAVORITTSTED = "poststed";
+    private static final String KEY_FAVORITTNR = "postnr";
+    private static final String KEY_LASTAUTO = "lastned";
+
+
 
     public SoekFragment() {
         // Required empty public constructor
@@ -52,48 +61,17 @@ public class SoekFragment extends Fragment {
         final View rotView = inflater.inflate(R.layout.fragment_soek_fragment, container, false);
 
         sokFelt = rotView.findViewById(R.id.sokFelt);
-        datoFelt = rotView.findViewById(R.id.datoFelt);
         sokKnapp = rotView.findViewById(R.id.sokKnapp);
         recyclerView = rotView.findViewById(R.id.recyclerTilsyn);
 
         context = rotView.getContext();
 
-        datoFelt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar kalender = Calendar.getInstance();
-                int aar = kalender.get(Calendar.YEAR);
-                int maamed = kalender.get(Calendar.MONTH);
-                int dag = kalender.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(context, android.R.style.Theme_Material_Light_Dialog, dateSetListener, aar, maamed, dag);
-                dialog.show();
-
-            }
-        });
-
-        dateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month += 1;
-                String dato;
-                if(month < 10) {
-                    dato = "" + "0" + dayOfMonth + "0" + month +  year;
-                } else if (dayOfMonth < 10) {
-                    dato = "" + "0" + dayOfMonth + month +  year;
-
-                } else {
-                    dato = "" + dayOfMonth + month +  year;
-
-                }
-                datoFelt.setText(dato);
-            }
-        };
 
         sokKnapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                url = sokFelt.getText().toString() + "&dato=" + datoFelt.getText();
+                url = sokFelt.getText().toString();
                 RestController.tilsynRequest(url, context, recyclerView);
             }
         });

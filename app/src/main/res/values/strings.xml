@@ -4,5 +4,16 @@
     <string name="bedrift_plassholder">Bedrift placeholder</string>
     <string name="adresse_plassholder">Adresse plassholder</string>
     <string name="alert_beskjed"><b>Er du sikker på at du vil fjerne fra listen?</b> <i>Tilsynet vil bli fjernet fra listen og du må gjennomføre et nytt søk for å se tilsynet</i></string>
+    <string name="title_activity_innstillinger">Innstillinger</string>
+
+
+    <!-- Sync Preferences -->
+    <string name="favoritt_string">Din favorittplass</string>
+    <string name="poststed_string">Poststed</string>
+    <string name="postnummer_string">Postnummer</string>
+    <string name="synk_av">Kun last ned data når det gjøres manuelt av deg</string>
+    <string name="synk_paa">Last ned favoritt data automatisk ved oppstart</string>
+    <string name="last_ned_tittel">Laste ned automatisk</string>
+    <string name="synk_tittel">Synkroniser data</string>
 
 </resources>

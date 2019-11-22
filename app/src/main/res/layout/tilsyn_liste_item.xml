@@ -6,7 +6,7 @@
     android:layout_gravity="center"
     android:layout_margin="5dp"
     card_view:cardCornerRadius="5dp"
-    card_view:cardElevation="10dp"
+    card_view:cardElevation="@dimen/cardview_default_elevation"
     card_view:cardBackgroundColor="#FFFFFF"
     >
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

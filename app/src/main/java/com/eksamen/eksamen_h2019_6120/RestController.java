@@ -2,6 +2,7 @@ package com.eksamen.eksamen_h2019_6120;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ public class RestController {
     protected static ArrayList<Tilsyn> tilsynArrayList;
     protected static ArrayList<Kravpunkt> kravpunkterArrayList;
     protected static TilsynListeAdapter tilsynAdapter;
+    protected static SmilefjesAdapter smilefjesAdapter;
 
     private final static String ARRAY_NAVN = "entries";
 
@@ -64,7 +66,7 @@ public class RestController {
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void kravpunkterRequest(String tilsynID, final Context context) {
+    public static void kravpunkterRequest(String tilsynID, final Context context, final ListView listView) {
 
         String url = ENDPOINT_KRAVPUNKT + tilsynID;
 
@@ -84,6 +86,9 @@ public class RestController {
                     }catch (JSONException e) {
 
                     }
+                    smilefjesAdapter = new SmilefjesAdapter(context, kravpunkterArrayList);
+                    listView.setAdapter(smilefjesAdapter);
+
                 }
 
             }

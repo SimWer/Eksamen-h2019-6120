@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 
 /**
@@ -28,9 +31,12 @@ public class SmilefjesRapport extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private TextView bedriftNavn, bedriftAdresse;
+
     private ListView kravlisteView;
 
     private Tilsyn valgtTilsyn;
+
+    private View rotView;
 
     private Kravpunkt valgtKravpunkt;
 
@@ -44,14 +50,9 @@ public class SmilefjesRapport extends Fragment {
         return new SmilefjesRapport();
     }
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rotView = inflater.inflate(R.layout.fragment_smilefjes_fragment, container, false);
-
-        bedriftNavn = rotView.findViewById(R.id.bedrift_plassholder);
-        bedriftAdresse = rotView.findViewById(R.id.adresse_plasshodler);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         if(getArguments() != null) {
             valgtTilsyn = (Tilsyn)getArguments().getSerializable(MainActivity.ID);
@@ -59,19 +60,25 @@ public class SmilefjesRapport extends Fragment {
             tilsynNavn = valgtTilsyn.getNavn();
             tilsynAdresse = valgtTilsyn.getAdrlinje1();
 
-            bedriftNavn.setText(tilsynNavn);
-            bedriftAdresse.setText(tilsynAdresse);
 
-            RestController.kravpunkterRequest(tilsynid, this.getContext());
-        }
-
-        if(RestController.kravpunkterArrayList != null) {
-            kravlisteView = rotView.findViewById(R.id.kravpunktListe);
-            ArrayAdapter<Kravpunkt> kravpunktArrayAdapter = new ArrayAdapter<>(this.getContext(), R.layout.kravpunkt_liste, R.id.kravpunktTekst, RestController.kravpunkterArrayList);
-            kravlisteView.setAdapter(kravpunktArrayAdapter);
-        } else {
 
         }
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rotView = inflater.inflate(R.layout.fragment_smilefjes_fragment, container, false);
+
+        bedriftNavn = rotView.findViewById(R.id.bedrift_plassholder);
+        bedriftAdresse = rotView.findViewById(R.id.adresse_plasshodler);
+        kravlisteView = rotView.findViewById(R.id.kravpunktListe);
+
+        bedriftNavn.setText(tilsynNavn);
+        bedriftAdresse.setText(tilsynAdresse);
+        //Søk etter kravpunkt-listen fra Tilsynet og vis den i form av en listview
+        RestController.kravpunkterRequest(valgtTilsyn.getTilsynid(), this.getContext(), kravlisteView );
 
         // Inflate the layout for this fragment
         return rotView;
