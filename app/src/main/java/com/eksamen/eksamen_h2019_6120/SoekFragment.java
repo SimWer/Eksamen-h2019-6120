@@ -5,17 +5,22 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 
 
 /**
@@ -32,9 +37,7 @@ public class SoekFragment extends Fragment {
 
     private String url;
 
-    private EditText sokFelt;
-
-    private Button sokKnapp;
+    private TextInputEditText sokInput;
 
     private Context context;
 
@@ -52,19 +55,28 @@ public class SoekFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rotView = inflater.inflate(R.layout.fragment_soek_fragment, container, false);
 
-        sokFelt = rotView.findViewById(R.id.sokFelt);
-        sokKnapp = rotView.findViewById(R.id.sokKnapp);
+        sokInput = rotView.findViewById(R.id.soekFelt);
         recyclerView = rotView.findViewById(R.id.recyclerTilsyn);
 
         context = rotView.getContext();
 
 
+        // For å søke på "søke"-knappen på tastaturet bruker jeg denne metoden:
+        // Kilde: https://stackoverflow.com/questions/3205339/android-how-to-make-keyboard-enter-button-say-search-and-handle-its-click
 
-        sokKnapp.setOnClickListener(new View.OnClickListener() {
+        sokInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-                url = sokFelt.getText().toString();
-                RestController.tilsynRequest(url, context, recyclerView);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+
+                            url = sokInput.getText().toString();
+                            RestController.tilsynRequest(url, context, recyclerView);
+
+                    return true;
+                }else {
+                    return false;
+
+                }
             }
         });
 

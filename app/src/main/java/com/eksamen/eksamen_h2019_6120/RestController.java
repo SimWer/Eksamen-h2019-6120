@@ -1,7 +1,6 @@
 package com.eksamen.eksamen_h2019_6120;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -12,7 +11,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,6 +19,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class RestController {
+
+
     protected static ArrayList<Tilsyn> tilsynArrayList;
     protected static ArrayList<Kravpunkt> kravpunkterArrayList;
     protected static TilsynListeAdapter tilsynAdapter;
@@ -108,6 +108,10 @@ public class RestController {
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
+
+
+
+
     public static void adresseRequest(String lat, String lon, final RecyclerView recyclerView, final Context context) {
         String url = "https://ws.geonorge.no/adresser/v1/punktsok?radius=300&lat=" + lon + "&lon=" + lat + "&treffPerSide=10&side=0&asciiKompatibel=true";
 
@@ -115,15 +119,22 @@ public class RestController {
             @Override
             public void onResponse(JSONObject response) {
                 JSONArray jsonArray = response.optJSONArray(ARRAY_ADRESSER);
-                try {
-                    JSONObject forsteObject = jsonArray.getJSONObject(0);
-                    postNr = forsteObject.optString(KOL_POSTNR);
-                    String poststed = forsteObject.optString(KOL_POSTSTED);
-                    Toast.makeText(context, "Du er her: " + poststed, Toast.LENGTH_SHORT).show();
-                    tilsynRequest(postNr, context, recyclerView);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    if(response == null) {
+
+                        Toast.makeText(context, "Det er ingen adresser registrert på din posisjon!", Toast.LENGTH_SHORT).show();
+
+                    }
+                    try {
+                        JSONObject forsteObject = jsonArray.getJSONObject(0);
+                        postNr = forsteObject.optString(KOL_POSTNR);
+                        String poststed = forsteObject.optString(KOL_POSTSTED);
+                        Toast.makeText(context, "Du er her: " + poststed, Toast.LENGTH_SHORT).show();
+                        tilsynRequest(postNr, context, recyclerView);
+                    } catch (JSONException e) {
+
+                    }
+
+
 
             }
         }, new Response.ErrorListener() {

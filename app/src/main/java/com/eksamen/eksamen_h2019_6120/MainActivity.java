@@ -1,22 +1,17 @@
 package com.eksamen.eksamen_h2019_6120;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -26,8 +21,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -38,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
 
 
     private static final String KEY_FAVORITTSTED    = "poststed";
-    private static final String KEY_FAVORITTNR      = "postnr";
     private static final String KEY_LASTAUTO        = "lastned";
 
     private static final int MY_REQUEST_LOCATION = 1;
@@ -62,15 +54,17 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
         toppMeny = findViewById(R.id.meny);
         setSupportActionBar(toppMeny);
 
+        //Sett searchview til å være "åpen" hele tiden
+
+
 
         if(savedInstanceState != null) {
 
         } else {
             soekFragment = SoekFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, soekFragment).addToBackStack(null).commit();
-        }
-        // Metode som kalles ved oppstart av aktiviten for å sjekke instillinger
 
+        }
     }
 
     @Override
@@ -79,16 +73,6 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
         MenuInflater inflater = getMenuInflater();
 
         inflater.inflate(R.menu.top_menu, menu);
-
-        final MenuItem soekItem = menu.findItem(R.id.soek_menu);
-        final SearchView soekView = (SearchView) soekItem.getActionView();
-        soekView.setIconified(false);
-        soekView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         return true;
     }
@@ -105,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
                 break;
             case R.id.posisjon_menu:
                 soekOppPosisjon();
-                break;
         }
 
 
@@ -164,7 +147,9 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, smileFragment).addToBackStack(null).commit();
 
         // For å vise tilbakeknapp bare etter søk og ikke på første fragmentet
-        if(smileFragment != null && soekFragment.isVisible()) {
+        if(smileFragment != null && smileFragment.isVisible()) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
