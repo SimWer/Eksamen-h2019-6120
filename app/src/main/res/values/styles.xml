@@ -1,34 +1,38 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="alertDialogTheme">@style/AlertDialogFarge</item>
+        <item name="materialAlertDialogTheme">@style/AlertDialogFarge</item>
     </style>
 
 
     <!-- Kode for å endre farge på knappene er hentet fra: https://stackoverflow.com/questions/27965662/how-can-i-change-default-dialog-button-text-color-in-android-5-->
 
 
-    <style name="AlertDialogFarge" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    <style name="AlertDialogFarge" parent="@style/ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="NegativeButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+    <style name="NegativeButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">#f00</item>
     </style>
 
-    <style name="PositiveButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+    <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">#8787FF</item>
     </style>
 
+
+
     <style name="meny_stil">
-        <item name="android:background">#304057</item>
+        <item name="android:background">@color/colorPrimary</item>
 
     </style>
 

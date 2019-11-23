@@ -6,6 +6,12 @@
         android:title="@string/soek_string"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.widget.SearchView" />
+    <item
+        android:id="@+id/posisjon_menu"
+        android:icon="@drawable/ic_my_location_white_24dp"
+        android:title="Min posisjon"
+        app:showAsAction="ifRoom"
+        />
     <item android:id="@+id/instillinger_menu"
         android:icon="@drawable/ic_settings_white_24dp"
         android:title="Innstillinger"

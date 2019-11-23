@@ -25,8 +25,14 @@ public class RestController {
     protected static ArrayList<Kravpunkt> kravpunkterArrayList;
     protected static TilsynListeAdapter tilsynAdapter;
     protected static SmilefjesAdapter smilefjesAdapter;
+    protected static String postNr;
 
     private final static String ARRAY_NAVN = "entries";
+    private final static String ARRAY_ADRESSER = "adresser";
+    private final static String KOL_POSTNR = "postnummer";
+    private final static String KOL_POSTSTED = "poststed";
+
+
 
 
     private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?query=";
@@ -100,5 +106,34 @@ public class RestController {
             }
         });
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public static void adresseRequest(String lat, String lon, final RecyclerView recyclerView, final Context context) {
+        String url = "https://ws.geonorge.no/adresser/v1/punktsok?radius=300&lat=" + lon + "&lon=" + lat + "&treffPerSide=10&side=0&asciiKompatibel=true";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                JSONArray jsonArray = response.optJSONArray(ARRAY_ADRESSER);
+                try {
+                    JSONObject forsteObject = jsonArray.getJSONObject(0);
+                    postNr = forsteObject.optString(KOL_POSTNR);
+                    String poststed = forsteObject.optString(KOL_POSTSTED);
+                    Toast.makeText(context, "Du er her: " + poststed, Toast.LENGTH_SHORT).show();
+                    tilsynRequest(postNr, context, recyclerView);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+
     }
 }
