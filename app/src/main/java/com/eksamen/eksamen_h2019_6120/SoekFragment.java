@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
+
 
 
 /**
@@ -39,8 +39,11 @@ public class SoekFragment extends Fragment {
 
     private TextInputEditText sokInput;
 
+    private Button filter_knapp, sorter_knapp;
+
     private Context context;
 
+    private Chip chip_aarstal;
 
     public SoekFragment() {
         // Required empty public constructor
@@ -57,6 +60,9 @@ public class SoekFragment extends Fragment {
 
         sokInput = rotView.findViewById(R.id.soekFelt);
         recyclerView = rotView.findViewById(R.id.recyclerTilsyn);
+        chip_aarstal = rotView.findViewById(R.id.chip_aarstall);
+        filter_knapp = rotView.findViewById(R.id.filter_knapp);
+        sorter_knapp = rotView.findViewById(R.id.sort_knapp);
 
         context = rotView.getContext();
 
@@ -68,8 +74,8 @@ public class SoekFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-
-                            url = sokInput.getText().toString();
+                            String aarstall_filter = chip_aarstal.getText().toString();
+                            url = sokInput.getText().toString() + " " + aarstall_filter;
                             RestController.tilsynRequest(url, context, recyclerView);
 
                     return true;
@@ -79,6 +85,22 @@ public class SoekFragment extends Fragment {
                 }
             }
         });
+
+
+        filter_knapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtrerSoek(rotView);
+            }
+        });
+        sorter_knapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sorterListe(rotView);
+            }
+        });
+
+
 
         //Kaller metoden ved onCreateView av fragmentet for å sjekke brukerinstillinger
         mListener.sjekkInstillinger(recyclerView);
@@ -99,7 +121,7 @@ public class SoekFragment extends Fragment {
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
                 // Kodeeksempler hentet fra stackoverflow: https://stackoverflow.com/questions/50137310/confirm-dialog-before-swipe-delete-using-itemtouchhelper
                 // Dialog for å bekrefte eller avkrefte sletting - Krav i oppgaveteksten
-                new MaterialAlertDialogBuilder(viewHolder.itemView.getContext())
+                new MaterialAlertDialogBuilder(viewHolder.itemView.getContext(), R.style.ThemeOverlay_MaterialComponents_Light)
                         .setMessage(R.string.alert_beskjed)
                         .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                             @Override
@@ -124,6 +146,94 @@ public class SoekFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return rotView;
+    }
+
+    private void sorterListe(View v) {
+
+        final CharSequence[] sorteringsListe = v.getContext().getResources().getStringArray(R.array.sortering);
+        final String[] valgtSorteringsMetode = {(String) sorteringsListe[0]};
+        final Chip chipSortering = v.findViewById(R.id.chip_sorter);
+
+        new MaterialAlertDialogBuilder(v.getContext(), R.style.ThemeOverlay_MaterialComponents_Dialog)
+                .setSingleChoiceItems(sorteringsListe, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        valgtSorteringsMetode[0] = (String) sorteringsListe[which];
+                    }
+                }).setPositiveButton("Ferdig", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(!valgtSorteringsMetode[0].isEmpty()) {
+                    if(chipSortering.isCloseIconVisible()) {
+                        chipSortering.setVisibility(View.GONE);
+                    }
+                    chipSortering.setText(valgtSorteringsMetode[0]);
+                    chipSortering.setVisibility(View.VISIBLE);
+                    RestController.tilsynAdapter.sorterAdapter(valgtSorteringsMetode[0]);
+                }
+            }
+        }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).create().show();
+
+        if(chipSortering.isCloseIconVisible()) {
+            chipSortering.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    chipSortering.setText("");
+                    chipSortering.setVisibility(View.GONE);
+                }
+            });
+        }
+
+
+    }
+
+    private void filtrerSoek(View v) {
+
+        final CharSequence[] aarstallListe = v.getContext().getResources().getStringArray(R.array.aarstall);
+        final String[] valgAarstall = {(String)aarstallListe[0]};
+        final Chip chipAarstall = v.findViewById(R.id.chip_aarstall);
+
+        new MaterialAlertDialogBuilder(v.getContext(), R.style.ThemeOverlay_MaterialComponents_Dialog)
+        .setSingleChoiceItems(aarstallListe, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                valgAarstall[0] = (String) aarstallListe[which];
+            }
+        }).setPositiveButton("Ferdig", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(!valgAarstall[0].isEmpty()) {
+                    if(chipAarstall.isCloseIconVisible()) {
+                        chipAarstall.setVisibility(View.GONE);
+                    }
+                    chipAarstall.setText(valgAarstall[0]);
+                    chipAarstall.setVisibility(View.VISIBLE);
+                    String filtrering = valgAarstall[0];
+                    RestController.tilsynAdapter.getFilter().filter(filtrering);
+                }
+            }
+        }).setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).create().show();
+
+        if(chipAarstall.isCloseIconVisible()) {
+            chipAarstall.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RestController.tilsynAdapter.getFilter().filter("");
+                    chipAarstall.setText("");
+                    chipAarstall.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
 

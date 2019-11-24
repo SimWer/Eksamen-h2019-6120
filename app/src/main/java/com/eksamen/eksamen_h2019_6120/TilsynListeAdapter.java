@@ -1,25 +1,32 @@
 package com.eksamen.eksamen_h2019_6120;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.TilsynViewHolder> {
+public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.TilsynViewHolder> implements Filterable {
 
     private LayoutInflater inflater;
     private MainActivity aktiviteten;
+    private ArrayList<Tilsyn> tilsynListeFiltrert;
+
 
     public TilsynListeAdapter(Context context) {
         inflater = LayoutInflater.from(context);
+        tilsynListeFiltrert = RestController.tilsynArrayList;
         this.aktiviteten = (MainActivity) context;
     }
 
@@ -33,22 +40,84 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TilsynListeAdapter.TilsynViewHolder holder, int position) {
-        Tilsyn tilsyn = RestController.tilsynArrayList.get(position);
+        Tilsyn tilsyn = tilsynListeFiltrert.get(position);
         holder.navn.setText(tilsyn.getNavn());
         holder.karakter.setText(tilsyn.getTotal_karakter());
         holder.orgNr.setText(tilsyn.getOrgnummer());
         holder.postnr.setText(tilsyn.getPostnr());
         holder.poststed.setText(tilsyn.getPoststed());
+        holder.dato.setText(tilsyn.getDato());
     }
 
     @Override
     public int getItemCount() {
-        return RestController.tilsynArrayList.size();
+        return tilsynListeFiltrert.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String filtreringString = constraint.toString();
+                if(filtreringString.isEmpty()) {
+                    tilsynListeFiltrert = RestController.tilsynArrayList;
+                } else {
+                    if(tilsynListeFiltrert.isEmpty()) {
+                        tilsynListeFiltrert = RestController.tilsynArrayList;
+                    }
+                    ArrayList<Tilsyn> filtrertListe = new ArrayList<>();
+
+                    for(int i = 0; i < tilsynListeFiltrert.size(); i++) {
+                        Tilsyn tilsyn = tilsynListeFiltrert.get(i);
+                        if(tilsyn.getDato().toLowerCase().contains(filtreringString.toLowerCase())) {
+                            filtrertListe.add(tilsyn);
+                        }
+
+                    }
+                    tilsynListeFiltrert = filtrertListe;
+                }
+                FilterResults filterResultat = new FilterResults();
+                filterResultat.values = tilsynListeFiltrert;
+
+                return filterResultat;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                tilsynListeFiltrert = (ArrayList<Tilsyn>) results.values;
+                notifyDataSetChanged();
+
+            }
+        };
+    }
+
+    public void sorterAdapter(String sValg) {
+
+        switch (sValg) {
+            case "Karakter stigende":
+                Collections.sort(tilsynListeFiltrert, Tilsyn.tilsynKarakterStigende);
+                notifyDataSetChanged();
+                break;
+            case "Karakter synkende":
+                Collections.sort(tilsynListeFiltrert, Tilsyn.tilsynKarakterSynkende);
+                notifyDataSetChanged();
+                break;
+            case "Navn stigende":
+                Collections.sort(tilsynListeFiltrert, Tilsyn.tilsynNavnComparatorStigende);
+                notifyDataSetChanged();
+                break;
+            case "Navn synkende":
+                Collections.sort(tilsynListeFiltrert, Tilsyn.tilsynNavnComparatorSynkende);
+                notifyDataSetChanged();
+                break;
+        }
+
     }
 
     class TilsynViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public final TextView navn, karakter, orgNr, postnr, poststed;
+        public final TextView navn, karakter, orgNr, postnr, poststed, dato;
         final TilsynListeAdapter adapter;
 
         public TilsynViewHolder(@NonNull View itemView, TilsynListeAdapter adapter) {
@@ -58,15 +127,17 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
             this.orgNr = itemView.findViewById(R.id.orgNrFelt);
             this.postnr = itemView.findViewById(R.id.postNrFelt);
             this.poststed = itemView.findViewById(R.id.poststedFelt);
+            this.dato = itemView.findViewById(R.id.datoFelt);
             this.adapter = adapter;
-            Collections.sort(RestController.tilsynArrayList, Tilsyn.tilsynKarakterSynkende);
+
             itemView.setOnClickListener(this);
 
         }
 
+
         @Override
         public void onClick(View v) {
-            Tilsyn tilsyn = RestController.tilsynArrayList.get(getLayoutPosition());
+            Tilsyn tilsyn = tilsynListeFiltrert.get(getLayoutPosition());
             aktiviteten.onTilsynValgt(tilsyn);
         }// Slutt på onClick
     }// Slutt på holder-klassen

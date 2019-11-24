@@ -7,11 +7,7 @@
         android:title="Min posisjon"
         app:showAsAction="ifRoom"
         />
-    <item android:id="@+id/filter_sortering"
-        android:icon="@drawable/ic_filter_list_black_24dp"
-        android:title="Filter eller søk"
-        app:showAsAction="ifRoom"
-        />
+
     <item android:id="@+id/instillinger_menu"
         android:icon="@drawable/ic_settings_white_24dp"
         android:title="Innstillinger"

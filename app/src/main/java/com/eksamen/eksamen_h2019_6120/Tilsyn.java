@@ -104,7 +104,7 @@ public class Tilsyn implements Serializable {
 
     @Override
     public String toString() {
-        return "Navn: " + this.navn + "  " + "Karakter: " + total_karakter;
+        return "Navn: " + this.navn + "  " + "Karakter: " + this.total_karakter + " Dato: " + this.dato;
     }
 
     public String getTilsynsobjektid() {

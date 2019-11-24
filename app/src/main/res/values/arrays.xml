@@ -1,12 +1,16 @@
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+   <string-array name="aarstall">
+        <item>2016</item>
+        <item>2017</item>
+        <item>2018</item>
+        <item>2019</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="sortering">
+        <item>Karakter stigende</item>
+        <item>Karakter synkende</item>
+        <item>Navn stigende</item>
+        <item>Navn synkende</item>
     </string-array>
 </resources>

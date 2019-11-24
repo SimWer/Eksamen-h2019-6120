@@ -15,5 +15,6 @@
     <string name="synk_paa">Last ned favoritt data automatisk ved oppstart</string>
     <string name="last_ned_tittel">Laste ned automatisk</string>
     <string name="synk_tittel">Synkroniser data</string>
+    <string name="aarstall_string">Årstall</string>
 
 </resources>

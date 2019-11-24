@@ -5,12 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -21,8 +21,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements SoekFragment.OnFragmentInteractionListener, SmilefjesRapport.OnFragmentInteractionListener{
     //ID for å hente ut data sendt fra fragment til fragment
@@ -35,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
 
     private static final int MY_REQUEST_LOCATION = 1;
 
+    private boolean isVisible;
     // Felt for GPS lokalisering
     private LocationManager locationManager;
     private String lokasjonsLeverandoer = LocationManager.GPS_PROVIDER;
@@ -44,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
     private SmilefjesRapport smileFragment;
 
     private Toolbar toppMeny;
+
+    private Chip chipAarstall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
 
         } else {
             soekFragment = SoekFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, soekFragment).addToBackStack(null).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, soekFragment).commit();
 
         }
     }
@@ -89,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
                 break;
             case R.id.posisjon_menu:
                 soekOppPosisjon();
+                break;
         }
 
 
@@ -166,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
             RestController.tilsynRequest(poststed, this, recyclerView);
         }
     }
+
 
 
     @Override

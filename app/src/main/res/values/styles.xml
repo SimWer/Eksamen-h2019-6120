@@ -9,6 +9,7 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="alertDialogTheme">@style/AlertDialogFarge</item>
         <item name="materialAlertDialogTheme">@style/AlertDialogFarge</item>
+        <item name="android:textColorHint">@color/background</item>
     </style>
 
 

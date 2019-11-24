@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_gravity="center"
     android:layout_margin="5dp"
-    card_view:cardElevation="50dp"
-    android:background="@color/listeFarger"
+    card_view:cardElevation="10dp"
     >
 
     <RelativeLayout
@@ -66,6 +65,13 @@
             android:paddingStart="10dp"
             android:paddingTop="@dimen/text_padding"
 
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/datoFelt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/poststedFelt"
             android:text="TextView" />
 
 

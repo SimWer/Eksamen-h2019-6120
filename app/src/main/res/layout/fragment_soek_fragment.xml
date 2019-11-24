@@ -4,39 +4,117 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="20dp"
     tools:context=".MainActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:background="@color/colorPrimary"
-        android:id="@+id/soekLayout"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent"
+        android:baselineAligned="false">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_margin="10dp"
-            android:background="@android:color/white"
-            android:id="@+id/soekFelt"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:imeOptions="actionSearch"
-            android:hint="@string/soek_string"
-            android:inputType="textPersonName"
-            android:textColorHint="@color/colorPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/soekLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:elevation="10dp"
+                android:hint="@string/soek_string"
+                app:hintEnabled="true">
 
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/soekFelt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@android:color/white"
+                    android:drawableStart="@drawable/ic_search_black_24dp"
+                    android:elevation="10dp"
+                    android:hint="@string/soek_string"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_gruppe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_aarstall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:closeIconVisible="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_sorter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:closeIconVisible="true" />
+                </com.google.android.material.chip.ChipGroup>
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/filter_knapp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?attr/buttonBarButtonStyle"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:text="Filtrer" />
+
+            <Button
+                android:id="@+id/sort_knapp"
+                android:layout_width="wrap_content"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@android:color/white"
+                style="?attr/buttonBarButtonStyle"
+                android:textAllCaps="false"
+                android:text="Sorter" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerTilsyn"
         android:layout_width="match_parent"
-        android:layout_height="475dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="?attr/actionBarSize"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/soekLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
