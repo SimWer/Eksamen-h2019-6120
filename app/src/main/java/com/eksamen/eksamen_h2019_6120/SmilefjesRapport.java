@@ -82,7 +82,10 @@ public class SmilefjesRapport extends Fragment {
         totalkarakter.setImageResource(bilde_id);
 
         //Søk etter kravpunkt-listen fra Tilsynet og vis den i form av en listview
-        RestController.kravpunkterRequest(valgtTilsyn.getTilsynid(), this.getContext(), kravlisteView );
+        if(valgtTilsyn != null) {
+            RestController.kravpunkterRequest(valgtTilsyn.getTilsynid(), this.getContext(), kravlisteView );
+
+        }
 
         // Inflate the layout for this fragment
         return rotView;

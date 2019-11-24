@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="20dp"
+    android:id="@+id/soek_fragmen"
     tools:context=".MainActivity">
 
     <LinearLayout

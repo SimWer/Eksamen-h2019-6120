@@ -16,6 +16,11 @@ public class SmilefjesAdapter extends ArrayAdapter {
 
     private ArrayList<Kravpunkt> kravpunktListe;
 
+    /**
+     *
+     * En adapterklasse for ListView'en som befinner seg i dataljert visning
+     *
+     * */
 
     public SmilefjesAdapter(Context context, ArrayList<Kravpunkt> kravpunktListe) {
         super(context, R.layout.kravpunkt_liste, kravpunktListe);

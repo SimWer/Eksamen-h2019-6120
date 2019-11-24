@@ -5,10 +5,11 @@ import android.view.MenuItem;
 
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceFragmentCompat;
+
+import java.util.Objects;
 
 public class Innstillinger extends AppCompatActivity {
 
@@ -28,7 +29,7 @@ public class Innstillinger extends AppCompatActivity {
         setSupportActionBar(toppMeny);
 
         if (toppMeny != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         }
     }
 

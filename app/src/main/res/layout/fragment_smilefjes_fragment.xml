@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/smil_fragment"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".SmilefjesRapport">
@@ -21,14 +22,18 @@ tools:context=".SmilefjesRapport">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="0dp"
                 android:orientation="horizontal"
                 android:baselineAligned="false"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:elevation="10dp"
+                android:background="@drawable/egendefinter_layour_shape">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -57,7 +62,7 @@ tools:context=".SmilefjesRapport">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:orientation="vertical">
 
@@ -76,8 +81,8 @@ tools:context=".SmilefjesRapport">
                 android:id="@+id/kravpunktListe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="?attr/actionBarSize"/>
+                android:layout_marginBottom="?attr/actionBarSize"
+                />
 
         </LinearLayout>
 

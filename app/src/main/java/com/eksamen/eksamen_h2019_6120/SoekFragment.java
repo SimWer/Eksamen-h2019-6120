@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.KeyEvent;
@@ -103,7 +104,14 @@ public class SoekFragment extends Fragment {
 
 
         //Kaller metoden ved onCreateView av fragmentet for å sjekke brukerinstillinger
-        mListener.sjekkInstillinger(recyclerView);
+
+        if(savedInstanceState != null) {
+            TilsynListeAdapter tilsynListeAdapter = new TilsynListeAdapter(this.getContext());
+            recyclerView.setAdapter(tilsynListeAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        } else {
+            mListener.sjekkInstillinger(recyclerView);
+        }
 
         //------------------------------------------------------------------------------------------//
         //------------------------------------------------------------------------------------------//
@@ -148,6 +156,19 @@ public class SoekFragment extends Fragment {
         return rotView;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MainActivity.ARRAY_ID_STATE, RestController.tilsynArrayList);
+    }
+
+    /**
+     *
+     * Metode for å sortere RecyclerView basert på brukervalg.
+     *
+     * @param v View
+     *
+     * */
     private void sorterListe(View v) {
 
         final CharSequence[] sorteringsListe = v.getContext().getResources().getStringArray(R.array.sortering);
@@ -191,6 +212,17 @@ public class SoekFragment extends Fragment {
 
 
     }
+
+
+    /**
+     *
+     * Metode for å filtrere søket basert på brukervalg.
+     *
+     * @param v View
+     *
+     * */
+
+    //Inspirasjon : https://www.androidhive.info/2017/11/android-recyclerview-with-search-filter-functionality/
 
     private void filtrerSoek(View v) {
 

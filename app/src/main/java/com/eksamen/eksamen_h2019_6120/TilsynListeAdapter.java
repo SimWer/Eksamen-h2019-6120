@@ -1,7 +1,6 @@
 package com.eksamen.eksamen_h2019_6120;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Adapter-klasse for å populere RecyclerView med data fra spørringen
+ * Denne klassen inneholder også filtreringsmetode basert på hva brukeren ønsker å filtrere
+ */
 
 public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.TilsynViewHolder> implements Filterable {
 
@@ -24,6 +26,9 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
     private MainActivity aktiviteten;
     private ArrayList<Tilsyn> tilsynListeFiltrert;
 
+    /**
+     * Konstruktør
+     */
 
     public TilsynListeAdapter(Context context) {
         inflater = LayoutInflater.from(context);
@@ -47,7 +52,7 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
         holder.orgNr.setText(tilsyn.getOrgnummer());
         holder.postnr.setText(tilsyn.getPostnr());
         holder.poststed.setText(tilsyn.getPoststed());
-        holder.dato.setText(tilsyn.getDato());
+        holder.dato.setText(tilsyn.getDatoMedSkille());
     }
 
     @Override
@@ -55,23 +60,25 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
         return tilsynListeFiltrert.size();
     }
 
+
+    // Inspirasjon: https://www.androidhive.info/2017/11/android-recyclerview-with-search-filter-functionality/
     @Override
     public Filter getFilter() {
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 String filtreringString = constraint.toString();
-                if(filtreringString.isEmpty()) {
+                if (filtreringString.isEmpty()) {
                     tilsynListeFiltrert = RestController.tilsynArrayList;
                 } else {
-                    if(tilsynListeFiltrert.isEmpty()) {
+                    if (tilsynListeFiltrert.isEmpty()) {
                         tilsynListeFiltrert = RestController.tilsynArrayList;
                     }
                     ArrayList<Tilsyn> filtrertListe = new ArrayList<>();
 
-                    for(int i = 0; i < tilsynListeFiltrert.size(); i++) {
+                    for (int i = 0; i < tilsynListeFiltrert.size(); i++) {
                         Tilsyn tilsyn = tilsynListeFiltrert.get(i);
-                        if(tilsyn.getDato().toLowerCase().contains(filtreringString.toLowerCase())) {
+                        if (tilsyn.getDato().toLowerCase().contains(filtreringString.toLowerCase())) {
                             filtrertListe.add(tilsyn);
                         }
 
@@ -91,7 +98,7 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
 
                 // Legger til en if her, for om den søker på en liste som er oppdatert vil den returne en tom array
                 // Den gjennomfører da søket på nytt, men den første listen og stringen
-                if(tilsynListeFiltrert.isEmpty()) {
+                if (tilsynListeFiltrert == null) {
                     getFilter().filter(constraint);
                 }
                 notifyDataSetChanged();
@@ -100,6 +107,11 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
         };
     }
 
+    /**
+     * Metode for å sortere adapteret på - basert på brukers ønsker
+     *
+     * @param sValg En string med valgt sortering
+     */
     public void sorterAdapter(String sValg) {
 
         switch (sValg) {
@@ -122,6 +134,10 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
         }
 
     }
+
+    /**
+     * ViewHolder-klasse for f.eks. å håndtere klikk på RecyclerView'en
+     */
 
     class TilsynViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

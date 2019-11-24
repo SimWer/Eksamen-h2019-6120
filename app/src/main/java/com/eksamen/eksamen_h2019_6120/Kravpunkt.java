@@ -2,6 +2,12 @@ package com.eksamen.eksamen_h2019_6120;
 
 import org.json.JSONObject;
 
+/**
+ *
+ * Klasse for å ta vare på informasjon om kravpunkt fra datahotellet
+ *
+ * */
+
 public class Kravpunkt {
 
     private String tilsynid, dato, ordningsverdi, kravpunktnavn_no, karakter, tekst_no;
@@ -22,14 +28,6 @@ public class Kravpunkt {
         this.tekst_no = jsonObject.optString(KOL_TEKST);
     }
 
-
-    public String getTilsynid() {
-        return tilsynid;
-    }
-
-    public String getDato() {
-        return dato;
-    }
 
     public String getOrdningsverdi() {
         return ordningsverdi;

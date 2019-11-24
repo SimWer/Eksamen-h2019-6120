@@ -1,11 +1,14 @@
 package com.eksamen.eksamen_h2019_6120;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
-public class Tilsyn implements Serializable {
+public class Tilsyn implements Serializable, Parcelable {
     private String tilsynsobjektid, orgnummer, navn, adrlinje1,
             adrlinje2, postnr, poststed, tilsynid, sakref, status,
             dato, total_karakter, tilsynbesoektype, tema1_no, karakter1,
@@ -61,6 +64,7 @@ public class Tilsyn implements Serializable {
         this.karater4           = tilsynJSON.optString(KOL_KARAKTER4);
 
     }
+
 
     // Metoder for å sortere basert på ulike ønsker fra bruker
     // Kilde: https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/
@@ -128,6 +132,43 @@ public class Tilsyn implements Serializable {
         }
     };
 
+    protected Tilsyn(Parcel in) {
+        tilsynsobjektid = in.readString();
+        orgnummer = in.readString();
+        navn = in.readString();
+        adrlinje1 = in.readString();
+        adrlinje2 = in.readString();
+        postnr = in.readString();
+        poststed = in.readString();
+        tilsynid = in.readString();
+        sakref = in.readString();
+        status = in.readString();
+        dato = in.readString();
+        total_karakter = in.readString();
+        tilsynbesoektype = in.readString();
+        tema1_no = in.readString();
+        karakter1 = in.readString();
+        tema2_no = in.readString();
+        karakter2 = in.readString();
+        tema3_no = in.readString();
+        karakter3 = in.readString();
+        tema4_no = in.readString();
+        karater4 = in.readString();
+        bilde_id = in.readInt();
+    }
+
+    public static final Creator<Tilsyn> CREATOR = new Creator<Tilsyn>() {
+        @Override
+        public Tilsyn createFromParcel(Parcel in) {
+            return new Tilsyn(in);
+        }
+
+        @Override
+        public Tilsyn[] newArray(int size) {
+            return new Tilsyn[size];
+        }
+    };
+
     /***
      *
      * Metode for å hente ut dato som ser bra ut fra Tilsynet.
@@ -147,6 +188,11 @@ public class Tilsyn implements Serializable {
         return datoSkille;
     }
 
+    /**
+     *
+     * toString er implemtert her da jeg trengte den tidlig i prosjektet
+     *
+     * */
     @Override
     public String toString() {
         return "Navn: " + this.navn + "  " + "Karakter: " + this.total_karakter + " Dato: " + this.dato;
@@ -191,5 +237,36 @@ public class Tilsyn implements Serializable {
 
     public void setBilde_id(int bilde_id) {
         this.bilde_id = bilde_id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(tilsynsobjektid);
+        dest.writeString(orgnummer);
+        dest.writeString(navn);
+        dest.writeString(adrlinje1);
+        dest.writeString(adrlinje2);
+        dest.writeString(postnr);
+        dest.writeString(poststed);
+        dest.writeString(tilsynid);
+        dest.writeString(sakref);
+        dest.writeString(status);
+        dest.writeString(dato);
+        dest.writeString(total_karakter);
+        dest.writeString(tilsynbesoektype);
+        dest.writeString(tema1_no);
+        dest.writeString(karakter1);
+        dest.writeString(tema2_no);
+        dest.writeString(karakter2);
+        dest.writeString(tema3_no);
+        dest.writeString(karakter3);
+        dest.writeString(tema4_no);
+        dest.writeString(karater4);
+        dest.writeInt(bilde_id);
     }
 }

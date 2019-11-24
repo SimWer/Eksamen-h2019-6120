@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -19,14 +21,19 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.chip.Chip;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 
 public class MainActivity extends AppCompatActivity implements SoekFragment.OnFragmentInteractionListener, SmilefjesRapport.OnFragmentInteractionListener{
     //ID for å hente ut data sendt fra fragment til fragment
     protected static final String ID                = "Eksamen-h2019-6120";
+    protected static final String ARRAY_ID_STATE    = "Eksamen-h2019-6120-Array_State";
 
     // Stringer som brukes
     private static final String KEY_FAVORITTSTED    = "poststed";
@@ -42,7 +49,11 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
     private SoekFragment soekFragment;
     private SmilefjesRapport smileFragment;
 
+    private long tilbakeTrykkTid;
+
     private Toolbar toppMeny;
+
+    private Toast toast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +65,22 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
         setSupportActionBar(toppMeny);
 
         if(savedInstanceState != null) {
+            // Må sjekke om den er i liggende eller stående
+            // Dette for at om den er i stående så skal den vise riktig fragment ingenting skjer om den er i liggende
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            } else {
+                soekFragment = SoekFragment.newInstance();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, soekFragment).commit();
+            }
 
         } else {
-            soekFragment = SoekFragment.newInstance();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, soekFragment).commit();
+            if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            } else {
+                soekFragment = SoekFragment.newInstance();
+                getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, soekFragment).commit();
+            }
 
         }
     }
@@ -85,12 +108,45 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
             case R.id.posisjon_menu:
                 soekOppPosisjon();
                 break;
+            case android.R.id.home:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, soekFragment).commit();
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                break;
+
         }
 
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+
+        // Jeg klikket meg ut uheldigvis veldig mange ganger
+        // La derfor til en måte å sjekke om brukeren faktisk vil gå ut av appen
+        if(soekFragment.isVisible()) {
+            if(tilbakeTrykkTid + 2000 > System.currentTimeMillis()) {
+                toast.cancel();
+                super.onBackPressed();
+                return;
+            } else {
+                toast = Toast.makeText(this, "Trykk tilbake igjen for å gå ut", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            tilbakeTrykkTid = System.currentTimeMillis();
+        } else {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            super.onBackPressed();
+
+        }
+    }
+
+    /**
+     *
+     * Søker opp posisjonen til brukeren og setter opp datasettet i RecyclerView'et
+     *
+     * */
+    // Dette er fra leksjonene vi har hatt på skolen, og fra undervisningsmateriell
     private void soekOppPosisjon() {
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -109,7 +165,15 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
                 minLokasjon = locationManager.getLastKnownLocation(lokasjonsLeverandoer);
                 String lengdeGrad = Location.convert(minLokasjon.getLongitude(), Location.FORMAT_DEGREES);
                 String breddeGrad = Location.convert(minLokasjon.getLatitude(), Location.FORMAT_DEGREES);
-                RestController.adresseRequest(lengdeGrad, breddeGrad, soekFragment.getRecyclerView(), this);
+
+                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    View v = findViewById(R.id.soek_fragmen);
+                    RecyclerView view = v.findViewById(R.id.recyclerTilsyn);
+                    RestController.adresseRequest(lengdeGrad, breddeGrad, view, this);
+                } else {
+                    RestController.adresseRequest(lengdeGrad, breddeGrad, soekFragment.getRecyclerView(), this);
+                }
+
             }
         }
 
@@ -117,6 +181,7 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
 
     }
 
+    // Dette er fra leksjonene vi har hatt på skolen, og fra undervisningsmateriell
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == MY_REQUEST_LOCATION) {
@@ -131,26 +196,62 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(ARRAY_ID_STATE, RestController.tilsynArrayList);
     }
+
+
+    /***
+     *
+     * Metode for å håndtere valg av tilsyn, og legger inn riktig informasjon basert på liggende eller stående format.
+     *
+     *
+     * @param tilsyn Valgt tilsyn fra brukeren
+     *
+     * */
 
     @Override
     public void onTilsynValgt(Tilsyn tilsyn) {
-        smileFragment = SmilefjesRapport.newInstance();
-        Bundle args = new Bundle();
-        args.putSerializable(ID, tilsyn);
-        smileFragment.setArguments(args);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, smileFragment).addToBackStack(null).commit();
+        // Sjekker om det er liggende format for å legeg inn data på en annen måte
+        // Det er ikke nødvendig å legge til eller replace fragmentene i liggende format
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
-        // For å vise tilbakeknapp bare etter søk og ikke på første fragmentet
-        if(smileFragment != null && smileFragment.isVisible()) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            View smilView = findViewById(R.id.smil_fragment);
+
+            TextView bedriftNavn = smilView.findViewById(R.id.bedrift_plassholder);
+            TextView bedriftAdresse = smilView.findViewById(R.id.adresse_plasshodler);
+            TextView dato = smilView.findViewById(R.id.dato_felt);
+            ImageView totalkarakter = smilView.findViewById(R.id.total_karakter_bilde);
+            ListView kravlisteView = smilView.findViewById(R.id.kravpunktListe);
+
+            bedriftNavn.setText(tilsyn.getNavn());
+            bedriftAdresse.setText(tilsyn.getAdrlinje1());
+            dato.setText(tilsyn.getDatoMedSkille());
+            totalkarakter.setImageResource(tilsyn.getBilde_id());
+
+            RestController.kravpunkterRequest(tilsyn.getTilsynid(), smilView.getContext(), kravlisteView );
+
         } else {
+
+            smileFragment = SmilefjesRapport.newInstance();
+            Bundle args = new Bundle();
+            args.putSerializable(ID, tilsyn);
+            smileFragment.setArguments(args);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, smileFragment).addToBackStack(null).commit();
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         }
 
     }
 
+
+    /**
+     *
+     * Sjekker innstilinger fra brukeren ved oppstart av applikasjonen
+     *
+     * @param recyclerView RecyclerViewet som skal ha datasettet
+     *
+     * */
     @Override
     public void sjekkInstillinger(RecyclerView recyclerView) {
         //Få instillinger fra appen, og sjekk om brukeren har valgt at det skal oppdataeres automatisk ved oppstart.
