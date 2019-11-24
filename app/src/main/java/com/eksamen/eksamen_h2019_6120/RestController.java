@@ -18,6 +18,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+/**
+ *
+ * En controller-klasse for å hente ut data fra Mattilsynets to api'er samt kartverkets API for adresser.
+ *
+ * */
+
 public class RestController {
 
 
@@ -38,6 +44,17 @@ public class RestController {
     private static final String ENDPOINT_TILSYN = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?query=";
     private static final String ENDPOINT_KRAVPUNKT = "http://hotell.difi.no/api/json/mattilsynet/smilefjes/kravpunkter?tilsynid=";
 
+
+    /**
+     *
+     * Metode for å hente ut tilsyn fra databasen, og så legge de inn i en ArrayList<Tilsyn>, denne metoden brukes også for å legge inn data i RecyclerView
+     *
+     * @param context Context'et trengs blant annet for å gjennomføre request med Singleton
+     * @param spoerring Spørringen som brukeren legger inn, her kan det også sendes med filter fra en annen metode
+     * @param view RecyclerView'et som datasettet skal legges inn i - legges inn via adapter
+     *
+     * */
+
     public static void tilsynRequest(String spoerring, final Context context, final RecyclerView view) {
 
         String url = ENDPOINT_TILSYN + spoerring;
@@ -54,6 +71,16 @@ public class RestController {
                     try {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         Tilsyn tilsyn = new Tilsyn(jsonObject);
+
+                        switch (tilsyn.getTotal_karakter()) {
+                            case "2": tilsyn.setBilde_id(R.drawable.tilsyn_trenger_oppfolgning);
+                                break;
+                            case "3": tilsyn.setBilde_id(R.drawable.tilsyn_ikke_ok);
+                                break;
+                            default: tilsyn.setBilde_id(R.drawable.tilsyn_ok);
+                                break;
+                        }
+
                         tilsynArrayList.add(tilsyn);
                     }catch (JSONException e) {
 
@@ -71,6 +98,16 @@ public class RestController {
         });
         MySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
+
+    /**
+     *
+     * Metode for å hente ut kravpunkt fra databasen, kravpunktene filtreres utifra tilsynID til tilsynet som brukeren velger
+     *
+     * @param context Context'et trengs blant annet for å gjennomføre request med Singleton
+     * @param tilsynID TilsynID til Tilsynet som brukeren har valgt
+     * @param listView ListViewt hvor kravpunktene skal legges inn
+     *
+     * */
 
     public static void kravpunkterRequest(String tilsynID, final Context context, final ListView listView) {
 
@@ -109,7 +146,16 @@ public class RestController {
     }
 
 
-
+    /**
+     *
+     * Metode for å hente ut adresser fra Kartverkets adresse-api. Denne metoden brukes for å bestemme postnr som brukeren befinner seg på
+     *
+     * @param context Context'et trengs blant annet for å gjennomføre request med Singleton
+     * @param recyclerView RecyclerView'et som datasettet skal legges inn i - legges inn ved kall på tilsynRequest metoden
+     * @param lat Breddegraden hvor brukeren befinner seg
+     * @param lon Lengdegraden hvor brukeren befinner seg
+     *
+     * */
 
 
     public static void adresseRequest(String lat, String lon, final RecyclerView recyclerView, final Context context) {

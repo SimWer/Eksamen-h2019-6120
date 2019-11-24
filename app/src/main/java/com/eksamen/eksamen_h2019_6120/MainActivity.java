@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -20,30 +19,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 
-import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements SoekFragment.OnFragmentInteractionListener, SmilefjesRapport.OnFragmentInteractionListener{
     //ID for å hente ut data sendt fra fragment til fragment
-
     protected static final String ID                = "Eksamen-h2019-6120";
 
-
+    // Stringer som brukes
     private static final String KEY_FAVORITTSTED    = "poststed";
     private static final String KEY_LASTAUTO        = "lastned";
 
     private static final int MY_REQUEST_LOCATION = 1;
 
-    private boolean isVisible;
     // Felt for GPS lokalisering
     private LocationManager locationManager;
     private String lokasjonsLeverandoer = LocationManager.GPS_PROVIDER;
@@ -54,8 +44,6 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
 
     private Toolbar toppMeny;
 
-    private Chip chipAarstall;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +52,6 @@ public class MainActivity extends AppCompatActivity implements SoekFragment.OnFr
         // Sett menyen til å være toolbar
         toppMeny = findViewById(R.id.meny);
         setSupportActionBar(toppMeny);
-
-        //Sett searchview til å være "åpen" hele tiden
-
-
 
         if(savedInstanceState != null) {
 

@@ -10,27 +10,24 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SmilefjesRapport.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ *
+ * En fragment-klasse for å vise en mer detaljert versjon av Tilsynet
+ * Det vises da også med kravpunktene som er gjennomført under tilsynet
+ *
  */
 public class SmilefjesRapport extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private TextView bedriftNavn, bedriftAdresse;
+    private TextView bedriftNavn, bedriftAdresse, dato;
+
+    private ImageView totalkarakter;
 
     private ListView kravlisteView;
 
@@ -38,9 +35,9 @@ public class SmilefjesRapport extends Fragment {
 
     private View rotView;
 
-    private Kravpunkt valgtKravpunkt;
+    private String tilsynNavn, tilsynAdresse, tilsynDato;
 
-    private String tilsynid, tilsynNavn, tilsynAdresse;
+    private int bilde_id;
 
     public SmilefjesRapport() {
         // Required empty public constructor
@@ -56,12 +53,10 @@ public class SmilefjesRapport extends Fragment {
 
         if(getArguments() != null) {
             valgtTilsyn = (Tilsyn)getArguments().getSerializable(MainActivity.ID);
-            tilsynid = valgtTilsyn.getTilsynid();
             tilsynNavn = valgtTilsyn.getNavn();
             tilsynAdresse = valgtTilsyn.getAdrlinje1();
-
-
-
+            tilsynDato = valgtTilsyn.getDatoMedSkille();
+            bilde_id = valgtTilsyn.getBilde_id();
         }
 
     }
@@ -73,10 +68,19 @@ public class SmilefjesRapport extends Fragment {
 
         bedriftNavn = rotView.findViewById(R.id.bedrift_plassholder);
         bedriftAdresse = rotView.findViewById(R.id.adresse_plasshodler);
+        dato = rotView.findViewById(R.id.dato_felt);
+
+        totalkarakter = rotView.findViewById(R.id.total_karakter_bilde);
+
         kravlisteView = rotView.findViewById(R.id.kravpunktListe);
+
+
 
         bedriftNavn.setText(tilsynNavn);
         bedriftAdresse.setText(tilsynAdresse);
+        dato.setText(tilsynDato);
+        totalkarakter.setImageResource(bilde_id);
+
         //Søk etter kravpunkt-listen fra Tilsynet og vis den i form av en listview
         RestController.kravpunkterRequest(valgtTilsyn.getTilsynid(), this.getContext(), kravlisteView );
 

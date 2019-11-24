@@ -10,6 +10,8 @@ public class Tilsyn implements Serializable {
             adrlinje2, postnr, poststed, tilsynid, sakref, status,
             dato, total_karakter, tilsynbesoektype, tema1_no, karakter1,
             tema2_no, karakter2, tema3_no, karakter3, tema4_no, karater4;
+    // Id som bestemmes ved lagingen av tilsyn, på denne måten slipper jeg å legge til mange switch'er
+    private int bilde_id;
 
     private static final String KOL_TILSYNOBJEKTID      = "tilsynsobjektid";
     private static final String KOL_ORGNUMMER           = "orgnummer";
@@ -62,6 +64,12 @@ public class Tilsyn implements Serializable {
 
     // Metoder for å sortere basert på ulike ønsker fra bruker
     // Kilde: https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/
+
+    /**
+     *
+     * Comparator for å sortere på Stigende navn-verdi
+     *
+     * */
     public static Comparator<Tilsyn> tilsynNavnComparatorStigende = new Comparator<Tilsyn>() {
         @Override
         public int compare(Tilsyn t1, Tilsyn t2) {
@@ -71,6 +79,12 @@ public class Tilsyn implements Serializable {
             return tilsynNavn1.compareTo(tilsynNavn2);
         }
     };
+
+    /**
+     *
+     * Comparator for å sortere på Synkende navn-verdi
+     *
+     * */
 
     public static Comparator<Tilsyn> tilsynNavnComparatorSynkende = new Comparator<Tilsyn>() {
         @Override
@@ -82,6 +96,12 @@ public class Tilsyn implements Serializable {
         }
     };
 
+    /**
+     *
+     * Comparator for å sortere på Stigende karakter-verdi
+     *
+     * */
+
     public static Comparator<Tilsyn> tilsynKarakterStigende = new Comparator<Tilsyn>() {
         @Override
         public int compare(Tilsyn t1, Tilsyn t2) {
@@ -91,6 +111,12 @@ public class Tilsyn implements Serializable {
             return tilsynNavn1.compareTo(tilsynNavn2);
         }
     };
+
+    /**
+     *
+     * Comparator for å sortere på Synkende karakter-verdi
+     *
+     * */
 
     protected static Comparator<Tilsyn> tilsynKarakterSynkende = new Comparator<Tilsyn>() {
         @Override
@@ -102,14 +128,30 @@ public class Tilsyn implements Serializable {
         }
     };
 
+    /***
+     *
+     * Metode for å hente ut dato som ser bra ut fra Tilsynet.
+     * Det ser vanligvis ut som 01012019 uten skille.
+     *
+     */
+
+    public String getDatoMedSkille() {
+
+        String aarstall = getDato().substring(4);
+        String maaned = getDato().substring(2, 4);
+        String dag = getDato().substring(0, 2);
+
+        String datoSkille = dag + "." + maaned + "." + aarstall;
+
+
+        return datoSkille;
+    }
+
     @Override
     public String toString() {
         return "Navn: " + this.navn + "  " + "Karakter: " + this.total_karakter + " Dato: " + this.dato;
     }
 
-    public String getTilsynsobjektid() {
-        return tilsynsobjektid;
-    }
 
     public String getOrgnummer() {
         return orgnummer;
@@ -121,10 +163,6 @@ public class Tilsyn implements Serializable {
 
     public String getAdrlinje1() {
         return adrlinje1;
-    }
-
-    public String getAdrlinje2() {
-        return adrlinje2;
     }
 
     public String getPostnr() {
@@ -139,14 +177,6 @@ public class Tilsyn implements Serializable {
         return tilsynid;
     }
 
-    public String getSakref() {
-        return sakref;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
     public String getDato() {
         return dato;
     }
@@ -155,39 +185,11 @@ public class Tilsyn implements Serializable {
         return total_karakter;
     }
 
-    public String getTilsynbesoektype() {
-        return tilsynbesoektype;
+    public int getBilde_id() {
+        return bilde_id;
     }
 
-    public String getTema1_no() {
-        return tema1_no;
-    }
-
-    public String getKarakter1() {
-        return karakter1;
-    }
-
-    public String getTema2_no() {
-        return tema2_no;
-    }
-
-    public String getKarakter2() {
-        return karakter2;
-    }
-
-    public String getTema3_no() {
-        return tema3_no;
-    }
-
-    public String getKarakter3() {
-        return karakter3;
-    }
-
-    public String getTema4_no() {
-        return tema4_no;
-    }
-
-    public String getKarater4() {
-        return karater4;
+    public void setBilde_id(int bilde_id) {
+        this.bilde_id = bilde_id;
     }
 }

@@ -16,5 +16,7 @@
     <string name="last_ned_tittel">Laste ned automatisk</string>
     <string name="synk_tittel">Synkroniser data</string>
     <string name="aarstall_string">Årstall</string>
+    <string name="dato_plassholder">Dato plassholder</string>
+    <string name="smilefjesbilde_content_description">SmilefjesBilde</string>
 
 </resources>

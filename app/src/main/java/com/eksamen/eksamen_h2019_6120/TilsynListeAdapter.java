@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
     public void onBindViewHolder(@NonNull TilsynListeAdapter.TilsynViewHolder holder, int position) {
         Tilsyn tilsyn = tilsynListeFiltrert.get(position);
         holder.navn.setText(tilsyn.getNavn());
-        holder.karakter.setText(tilsyn.getTotal_karakter());
+        holder.karakter.setImageResource(tilsyn.getBilde_id());
         holder.orgNr.setText(tilsyn.getOrgnummer());
         holder.postnr.setText(tilsyn.getPostnr());
         holder.poststed.setText(tilsyn.getPoststed());
@@ -75,6 +76,7 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
                         }
 
                     }
+
                     tilsynListeFiltrert = filtrertListe;
                 }
                 FilterResults filterResultat = new FilterResults();
@@ -86,6 +88,12 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 tilsynListeFiltrert = (ArrayList<Tilsyn>) results.values;
+
+                // Legger til en if her, for om den søker på en liste som er oppdatert vil den returne en tom array
+                // Den gjennomfører da søket på nytt, men den første listen og stringen
+                if(tilsynListeFiltrert.isEmpty()) {
+                    getFilter().filter(constraint);
+                }
                 notifyDataSetChanged();
 
             }
@@ -117,7 +125,8 @@ public class TilsynListeAdapter extends RecyclerView.Adapter<TilsynListeAdapter.
 
     class TilsynViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public final TextView navn, karakter, orgNr, postnr, poststed, dato;
+        public final TextView navn, orgNr, postnr, poststed, dato;
+        public final ImageView karakter;
         final TilsynListeAdapter adapter;
 
         public TilsynViewHolder(@NonNull View itemView, TilsynListeAdapter adapter) {
